@@ -27,7 +27,14 @@ const answerSchema = new mongoose.Schema({
   teacherOverride: {
     type: Boolean,
     default: false
-  }
+  },
+  coverageScore: {
+  type: Number,
+  default: 0
+  },
+  coveredConcepts: [String],
+  missingConcepts: [String]
+
 }, { timestamps: true });
 
 module.exports = mongoose.model("Answer", answerSchema);
