@@ -33,7 +33,12 @@ const answerSchema = new mongoose.Schema({
   default: 0
   },
   coveredConcepts: [String],
-  missingConcepts: [String]
+  missingConcepts: [String],
+  rubricScore: {
+  type: Number,
+  default: 0
+}
+
 
 }, { timestamps: true });
 

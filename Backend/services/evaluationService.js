@@ -23,3 +23,16 @@ exports.analyzeConceptCoverage = (answerText, concepts) => {
     coverageScore
   };
 };
+
+exports.calculateRubricScore = (answerText, rubric) => {
+  const normalized = answerText.toLowerCase();
+  let totalScore = 0;
+
+  rubric.forEach(item => {
+    if (normalized.includes(item.concept.toLowerCase())) {
+      totalScore += item.marks;
+    }
+  });
+
+  return totalScore;
+};
