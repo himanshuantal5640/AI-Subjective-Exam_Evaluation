@@ -1,12 +1,8 @@
+
 const Exam = require("../models/Exam");
 
-exports.createExam = async ({ title, subject, teacherId }) => {
-  const exam = await Exam.create({
-    title,
-    subject,
-    teacherId
-  });
-  return exam;
+exports.createExam = async (data) => {
+  return await Exam.create(data);
 };
 
 exports.getTeacherExams = async (teacherId) => {
