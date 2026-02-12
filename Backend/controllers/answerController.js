@@ -56,10 +56,17 @@ exports.submitAnswer = async (req, res) => {
       examId,
       questionId,
       answerText,
-      ...coverage,
+      // Evaluation fields
+      coveredConcepts: coverage.coveredConcepts,
+      missingConcepts: coverage.missingConcepts,
+      coverageScore: coverage.coverageScore,
       rubricScore,
       qualityScore,
-      finalScore,
+
+      // 🔥 Phase 3 compatible structure
+      aiFinalScore: finalScore,
+      teacherFinalScore: finalScore,
+      isOverridden: false,
       confidenceLevel,
       feedback
     });

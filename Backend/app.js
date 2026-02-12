@@ -6,6 +6,8 @@ const authRoutes = require("./routes/authRoutes");
 const examRoutes = require("./routes/examRoutes");
 const questionRoutes = require("./routes/questionRoutes");
 const answerRoutes = require("./routes/answerRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+
 
 
 const app = express();
@@ -18,5 +20,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/exams", examRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/answers", answerRoutes);
+app.use("/api/review", reviewRoutes);
 
 module.exports = app;

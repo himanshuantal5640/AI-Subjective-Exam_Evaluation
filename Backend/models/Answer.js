@@ -6,57 +6,74 @@ const answerSchema = new mongoose.Schema({
     ref: "User",
     required: true
   },
+
   examId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Exam",
     required: true
   },
+
   questionId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Question",
     required: true
   },
+
   answerText: {
     type: String,
     required: true
   },
-  marksAwarded: {
+
+  // 🔹 Phase 2 Evaluation Fields
+  coveredConcepts: [String],
+
+  missingConcepts: [String],
+
+  coverageScore: {
     type: Number,
     default: 0
   },
-  teacherOverride: {
+
+  rubricScore: {
+    type: Number,
+    default: 0
+  },
+
+  qualityScore: {
+    type: Number,
+    default: 0
+  },
+
+  // 🔹 Phase 3 Human-in-the-Loop Fields
+  aiFinalScore: {
+    type: Number,
+    default: 0
+  },
+
+  teacherFinalScore: {
+    type: Number,
+    default: 0
+  },
+
+  isOverridden: {
     type: Boolean,
     default: false
   },
-  coverageScore: {
-  type: Number,
-  default: 0
+
+  teacherComment: {
+    type: String
   },
-  coveredConcepts: [String],
-  missingConcepts: [String],
-  rubricScore: {
-  type: Number,
-  default: 0
-},
-qualityScore: {
-  type: Number,
-  default: 0
-},
-finalScore: {
-  type: Number,
-  default: 0
-},
-confidenceLevel: {
-  type: String,
-  enum: ["Low", "Medium", "High"],
-  default: "Low"
-},
-feedback: {
-  type: String
-}
 
+  // 🔹 Transparency Fields
+  confidenceLevel: {
+    type: String,
+    enum: ["Low", "Medium", "High"],
+    default: "Low"
+  },
 
-
+  feedback: {
+    type: String
+  }
 
 }, { timestamps: true });
 
