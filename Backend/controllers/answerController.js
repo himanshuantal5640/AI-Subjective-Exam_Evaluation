@@ -8,7 +8,6 @@ exports.submitAnswer = async (req, res) => {
     const { examId, questionId, answerText } = req.body;
 
     const question = await Question.findById(questionId);
-
     if (!question)
       return res.status(404).json({ message: "Question not found" });
 
@@ -19,19 +18,38 @@ exports.submitAnswer = async (req, res) => {
         question.concepts
       );
 
-    // Rubric score
+    // Rubric scoring
     const rubricScore =
       evaluationService.calculateRubricScore(
         answerText,
         question.rubric
       );
 
-    // Quality score
+    // Quality scoring
     const qualityScore =
       evaluationService.calculateQualityScore(answerText);
 
-    // Final score
-    const finalScore = rubricScore + qualityScore;
+    // Weighted final score
+    const finalScore =
+      evaluationService.calculateFinalScore(
+        rubricScore,
+        coverage.coverageScore,
+        qualityScore
+      );
+
+    // Confidence
+    const confidenceLevel =
+      evaluationService.calculateConfidence(
+        coverage.coverageScore
+      );
+
+    // Feedback
+    const feedback =
+      evaluationService.generateFeedback(
+        coverage.coveredConcepts,
+        coverage.missingConcepts,
+        qualityScore
+      );
 
     const answer = await Answer.create({
       studentId: req.user.id,
@@ -41,7 +59,9 @@ exports.submitAnswer = async (req, res) => {
       ...coverage,
       rubricScore,
       qualityScore,
-      finalScore
+      finalScore,
+      confidenceLevel,
+      feedback
     });
 
     res.status(201).json(answer);
@@ -50,8 +70,6 @@ exports.submitAnswer = async (req, res) => {
     res.status(400).json({ message: e.message });
   }
 };
-
-
 
 
 exports.getMyAnswers = async (req, res) => {

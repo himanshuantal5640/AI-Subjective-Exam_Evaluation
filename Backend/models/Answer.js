@@ -45,7 +45,16 @@ qualityScore: {
 finalScore: {
   type: Number,
   default: 0
+},
+confidenceLevel: {
+  type: String,
+  enum: ["Low", "Medium", "High"],
+  default: "Low"
+},
+feedback: {
+  type: String
 }
+
 
 
 

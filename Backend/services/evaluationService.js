@@ -61,3 +61,39 @@ exports.calculateQualityScore = (answerText) => {
 
   return score;
 };
+
+
+exports.calculateFinalScore = (rubricScore, coverageScore, qualityScore) => {
+  return Math.round(
+    (rubricScore * 0.5) +
+    (coverageScore * 0.3) +
+    (qualityScore * 0.2)
+  );
+};
+
+exports.calculateConfidence = (coverageScore) => {
+  if (coverageScore > 70) return "High";
+  if (coverageScore >= 40) return "Medium";
+  return "Low";
+};
+
+exports.generateFeedback = (
+  coveredConcepts,
+  missingConcepts,
+  qualityScore
+) => {
+  let feedback = "";
+
+  if (coveredConcepts.length > 0)
+    feedback += `Good coverage of: ${coveredConcepts.join(", ")}. `;
+
+  if (missingConcepts.length > 0)
+    feedback += `Missing concepts: ${missingConcepts.join(", ")}. `;
+
+  if (qualityScore > 4)
+    feedback += "Well structured explanation. ";
+  else
+    feedback += "Answer lacks structural clarity. ";
+
+  return feedback.trim();
+};

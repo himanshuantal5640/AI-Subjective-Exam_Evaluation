@@ -238,7 +238,17 @@ That is basically:
 Phase	Purpose
 Phase 0	Secure auth
 Phase 1	Core exam system
-Phase 2	AI evaluation engine
+Phase 2	AI evaluation engine (improve later Optional improvements (not mandatory now):
+
+Synonym matching instead of exact keyword
+
+Better NLP cleaning
+
+Better weighting calibration
+
+Duplicate answer prevention
+
+Evaluation logging)
 Phase 3	Teacher override
 Phase 4	Analytics dashboards
 Phase 5	Production hardening
