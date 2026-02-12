@@ -13,26 +13,35 @@ exports.submitAnswer = async (req, res) => {
       return res.status(404).json({ message: "Question not found" });
 
     // Concept coverage
-    const coverageAnalysis =
+    const coverage =
       evaluationService.analyzeConceptCoverage(
         answerText,
         question.concepts
       );
 
-    // Rubric scoring
+    // Rubric score
     const rubricScore =
       evaluationService.calculateRubricScore(
         answerText,
         question.rubric
       );
 
+    // Quality score
+    const qualityScore =
+      evaluationService.calculateQualityScore(answerText);
+
+    // Final score
+    const finalScore = rubricScore + qualityScore;
+
     const answer = await Answer.create({
       studentId: req.user.id,
       examId,
       questionId,
       answerText,
-      ...coverageAnalysis,
-      rubricScore
+      ...coverage,
+      rubricScore,
+      qualityScore,
+      finalScore
     });
 
     res.status(201).json(answer);
@@ -41,6 +50,7 @@ exports.submitAnswer = async (req, res) => {
     res.status(400).json({ message: e.message });
   }
 };
+
 
 
 

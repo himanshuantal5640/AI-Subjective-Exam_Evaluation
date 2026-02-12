@@ -37,7 +37,16 @@ const answerSchema = new mongoose.Schema({
   rubricScore: {
   type: Number,
   default: 0
+},
+qualityScore: {
+  type: Number,
+  default: 0
+},
+finalScore: {
+  type: Number,
+  default: 0
 }
+
 
 
 }, { timestamps: true });

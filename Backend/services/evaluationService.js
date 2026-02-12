@@ -36,3 +36,28 @@ exports.calculateRubricScore = (answerText, rubric) => {
 
   return totalScore;
 };
+
+exports.calculateQualityScore = (answerText) => {
+  let score = 0;
+
+  const words = answerText.split(" ").length;
+  const sentences = answerText.split(".").length;
+
+  // Length check
+  if (words > 50) score += 2;
+
+  // Structure check
+  if (sentences > 2) score += 2;
+
+  // Explanation depth
+  const depthKeywords = ["because", "therefore", "hence", "thus"];
+  if (depthKeywords.some(word => answerText.toLowerCase().includes(word)))
+    score += 2;
+
+  // Example presence
+  const exampleKeywords = ["for example", "e.g", "such as"];
+  if (exampleKeywords.some(word => answerText.toLowerCase().includes(word)))
+    score += 2;
+
+  return score;
+};
