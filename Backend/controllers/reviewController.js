@@ -29,12 +29,27 @@ exports.overrideAnswerScore = async (req, res) => {
     const updated =
       await reviewService.overrideScore(
         req.params.answerId,
+        req.user.id, // 🔥 Teacher ID
         teacherFinalScore,
         teacherComment
       );
 
     res.json(updated);
 
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+};
+
+
+exports.getAuditLogs = async (req, res) => {
+  try {
+    const logs =
+      await reviewService.getAuditLogsForAnswer(
+        req.params.answerId
+      );
+
+    res.json(logs);
   } catch (e) {
     res.status(400).json({ message: e.message });
   }

@@ -7,6 +7,7 @@ const examRoutes = require("./routes/examRoutes");
 const questionRoutes = require("./routes/questionRoutes");
 const answerRoutes = require("./routes/answerRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
 
 
 
@@ -21,5 +22,6 @@ app.use("/api/exams", examRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/answers", answerRoutes);
 app.use("/api/review", reviewRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 module.exports = app;

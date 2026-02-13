@@ -18,5 +18,12 @@ router.put(
   role(["teacher"]),
   reviewController.overrideAnswerScore
 );
+router.get(
+  "/audit/:answerId",
+  auth,
+  role(["teacher", "admin"]),
+  reviewController.getAuditLogs
+);
+
 
 module.exports = router;
