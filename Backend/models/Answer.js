@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const answerSchema = new mongoose.Schema({
+
   studentId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -24,56 +25,38 @@ const answerSchema = new mongoose.Schema({
     required: true
   },
 
-  // 🔹 Phase 2 Evaluation Fields
+  // ===== RULE-BASED =====
   coveredConcepts: [String],
-
   missingConcepts: [String],
+  coverageScore: Number,
+  rubricScore: Number,
+  qualityScore: Number,
+  aiFinalScore: Number, // rule-based weighted
 
-  coverageScore: {
-    type: Number,
-    default: 0
-  },
+  // ===== AI SEMANTIC =====
+  aiSemanticScore: Number,
+  aiSemanticFeedback: String,
 
-  rubricScore: {
-    type: Number,
-    default: 0
-  },
+  // ===== HYBRID =====
+  hybridFinalScore: Number,
 
-  qualityScore: {
-    type: Number,
-    default: 0
-  },
-
-  // 🔹 Phase 3 Human-in-the-Loop Fields
-  aiFinalScore: {
-    type: Number,
-    default: 0
-  },
-
-  teacherFinalScore: {
-    type: Number,
-    default: 0
-  },
-
+  // ===== TEACHER CONTROL =====
+  teacherFinalScore: Number,
   isOverridden: {
     type: Boolean,
     default: false
   },
+  teacherComment: String,
 
-  teacherComment: {
-    type: String
-  },
-
-  // 🔹 Transparency Fields
   confidenceLevel: {
     type: String,
     enum: ["Low", "Medium", "High"],
     default: "Low"
   },
 
-  feedback: {
-    type: String
-  }
+  feedback: String,
+  aiConfidence: String,
+
 
 }, { timestamps: true });
 

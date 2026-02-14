@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const auditLogSchema = new mongoose.Schema({
+
   answerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Answer",
@@ -13,23 +14,10 @@ const auditLogSchema = new mongoose.Schema({
     required: true
   },
 
-  aiFinalScore: {
-    type: Number,
-    required: true
-  },
-
-  previousTeacherScore: {
-    type: Number
-  },
-
-  newTeacherScore: {
-    type: Number,
-    required: true
-  },
-
-  teacherComment: {
-    type: String
-  }
+  aiFinalScore: Number,
+  previousTeacherScore: Number,
+  newTeacherScore: Number,
+  teacherComment: String
 
 }, { timestamps: true });
 
