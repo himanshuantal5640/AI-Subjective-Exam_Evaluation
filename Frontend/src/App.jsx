@@ -1,17 +1,17 @@
-import React from 'react';
-import './App.css'
-import Login from './pages/Login';
-
-
-
-
-
+import React from "react";
+import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import AppRoutes from "./routes/AppRoutes";
+import { Toaster } from "react-hot-toast";
 
 function App() {
-
-
   return (
-      <Login/>
+    <ThemeProvider>
+      <AuthProvider>
+        <Toaster position="top-right" />
+        <AppRoutes />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
