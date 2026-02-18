@@ -11,11 +11,10 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
 
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    const root = window.document.documentElement;
+
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
 
     localStorage.setItem("theme", theme);
 
