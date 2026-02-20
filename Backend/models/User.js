@@ -46,7 +46,12 @@ otpResendCount: {
   default: 0
 },
 
-otpLastSentAt: Date
+otpLastSentAt: Date,
+ 
+profileImage: {
+      type: String,
+      default: "",
+},
 
 
 }, { timestamps: true });

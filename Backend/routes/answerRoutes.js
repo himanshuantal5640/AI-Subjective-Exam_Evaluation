@@ -3,6 +3,9 @@ const router = express.Router();
 const c = require("../controllers/answerController");
 const auth = require("../middleware/authMiddleware");
 const role = require("../middleware/roleMiddleware");
+const Answer = require('../models/Answer');
+
+
 
 // Student submits answer
 router.post(
@@ -19,5 +22,13 @@ router.get(
   role(["student"]),
   c.getMyAnswers
 );
+router.get("/my-results", auth, async (req, res) => {
+
+  const answers = await Answer.find({
+    studentId: req.user.id
+  });
+
+  res.json(answers);
+});
 
 module.exports = router;

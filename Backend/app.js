@@ -10,6 +10,8 @@ const reviewRoutes = require("./routes/reviewRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const userRoutes = require("./routes/userRoutes");
+
 
 
 const app = express();
@@ -36,6 +38,7 @@ app.use("/api/review", reviewRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/chat",chatRoutes);
+app.use("/api/users", userRoutes);
 
 
 module.exports = app;
