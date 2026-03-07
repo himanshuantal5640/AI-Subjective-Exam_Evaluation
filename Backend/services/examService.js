@@ -8,3 +8,7 @@ exports.createExam = async (data) => {
 exports.getTeacherExams = async (teacherId) => {
   return await Exam.find({ teacherId });
 };
+
+exports.getAllExams = async () => {
+  return await Exam.find({}); // Returns all exams
+};

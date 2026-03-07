@@ -22,6 +22,15 @@ exports.getMyExams = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+exports.getAvailableExams = async (req, res) => {
+  try {
+    const exams = await examService.getAllExams();
+    res.json(exams);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 // exports.getTeacherExams = async (req, res) => {
 //   try {
 //     const exams = await Exam.find({

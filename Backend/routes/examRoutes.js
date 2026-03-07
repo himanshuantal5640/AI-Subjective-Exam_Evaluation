@@ -11,4 +11,7 @@ router.post("/create", auth, role(["teacher"]), examController.createExam);
 
 router.get("/my-exams", auth, role(["teacher"]), examController.getMyExams);
 
+// Students can fetch available exams
+router.get("/available", auth, role(["student"]), examController.getAvailableExams);
+
 module.exports = router;

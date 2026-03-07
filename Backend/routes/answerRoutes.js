@@ -13,7 +13,7 @@ router.get("/:examId", auth, role(["student"]), c.getMyAnswers);
 router.get("/my-results", auth, async (req, res) => {
   const answers = await Answer.find({
     studentId: req.user.id,
-  });
+  }).populate("examId", "title");
 
   res.json(answers);
 });
