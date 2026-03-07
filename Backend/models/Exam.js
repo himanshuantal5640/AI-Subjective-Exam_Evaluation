@@ -19,7 +19,12 @@ const examSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Question"
     }
-  ]
+  ],
+  status: {
+    type: String,
+    enum: ["active", "completed"],
+    default: "active"
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Exam", examSchema);

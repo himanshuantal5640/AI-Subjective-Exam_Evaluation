@@ -9,13 +9,19 @@ const Answer = require("../models/Answer");
 router.post("/submit", auth, role(["student"]), c.submitAnswer);
 
 
-router.get("/:examId", auth, role(["student"]), c.getMyAnswers);
 router.get("/my-results", auth, async (req, res) => {
-  const answers = await Answer.find({
-    studentId: req.user.id,
-  }).populate("examId", "title");
+  try {
+    const answers = await Answer.find({
+      studentId: req.user._id,
+    }).populate("examId", "title");
 
-  res.json(answers);
+    res.json(answers);
+  } catch (err) {
+    console.error("Error fetching my-results:", err);
+    res.status(500).json({ message: err.message });
+  }
 });
+
+router.get("/:examId", auth, role(["student"]), c.getMyAnswers);
 
 module.exports = router;
