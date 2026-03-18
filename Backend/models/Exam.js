@@ -14,6 +14,16 @@ const examSchema = new mongoose.Schema({
     ref: "User",
     required: true
   },
+  duration: {
+    type: Number,
+    required: true,
+    default: 60
+  },
+  totalMarks: {
+    type: Number,
+    required: true,
+    default: 100
+  },
   questions: [
     {
       type: mongoose.Schema.Types.ObjectId,

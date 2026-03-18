@@ -66,3 +66,27 @@ exports.getStudents = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.getTeachers = async (req, res) => {
+  try {
+    const teachers = await User.find({
+      role: "teacher",
+      isActive: true
+    }).select("-password");
+    res.json(teachers);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getAdmins = async (req, res) => {
+  try {
+    const admins = await User.find({
+      role: "admin",
+      isActive: true
+    }).select("-password");
+    res.json(admins);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
