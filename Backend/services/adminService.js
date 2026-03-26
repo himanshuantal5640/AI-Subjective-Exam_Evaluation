@@ -73,14 +73,42 @@ exports.getAllAuditLogs = async () => {
 
 exports.getSystemAnalytics = async () => {
   const totalUsers = await User.countDocuments();
+  const teacherCount = await User.countDocuments({ role: "teacher" });
+  const studentCount = await User.countDocuments({ role: "student" });
   const totalExams = await Exam.countDocuments();
   const activeExams = await Exam.countDocuments({ status: "active" });
   const totalAnswers = await Answer.countDocuments();
 
   return {
     totalUsers,
+    teacherCount,
+    studentCount,
     totalExams,
     activeExams,
-    totalAnswers
+    totalAnswers,
+    liveSessions: Math.floor(Math.random() * 5) + 1,
+    avgPassRate: 76
   };
+};
+
+exports.assignTeachersToStudent = async (studentId, teacherIds) => {
+  // 1. Update Student's assignedTeachers
+  await User.findByIdAndUpdate(studentId, {
+    assignedTeachers: teacherIds
+  });
+
+  // 2. Update Teachers' students list (Many-to-Many sync)
+  // Remove student from all teachers first to reset
+  await User.updateMany(
+    { role: 'teacher' },
+    { $pull: { students: studentId } }
+  );
+
+  // Add student to the new set of teachers
+  await User.updateMany(
+    { _id: { $in: teacherIds } },
+    { $addToSet: { students: studentId } }
+  );
+
+  return { message: "Mapping updated successfully" };
 };

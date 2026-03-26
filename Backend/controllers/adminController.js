@@ -37,3 +37,13 @@ exports.getSystemAnalytics = async (req, res) => {
   const data = await adminService.getSystemAnalytics();
   res.json(data);
 };
+
+exports.assignMapping = async (req, res) => {
+  try {
+    const { studentId, teacherIds } = req.body;
+    const result = await adminService.assignTeachersToStudent(studentId, teacherIds);
+    res.json(result);
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+};

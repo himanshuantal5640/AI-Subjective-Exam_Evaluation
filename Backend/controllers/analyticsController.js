@@ -30,3 +30,12 @@ exports.getTeacherAnalytics = async (req, res) => {
     res.status(400).json({ message: e.message });
   }
 };
+
+exports.getSystemAnalytics = async (req, res) => {
+  try {
+    const data = await analyticsService.getSystemAnalytics();
+    res.json(data);
+  } catch (e) {
+    res.status(400).json({ message: e.message });
+  }
+};

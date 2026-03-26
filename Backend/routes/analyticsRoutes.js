@@ -7,5 +7,6 @@ const role = require("../middleware/roleMiddleware");
 router.get("/student",auth,role(["student"]),analyticsController.getMyAnalytics);
 
 router.get("/teacher/:examId",auth,role(["teacher"]),analyticsController.getTeacherAnalytics);
+router.get("/system",auth,role(["admin"]),analyticsController.getSystemAnalytics);
 
 module.exports = router;

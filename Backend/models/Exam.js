@@ -34,6 +34,10 @@ const examSchema = new mongoose.Schema({
     type: String,
     enum: ["active", "completed"],
     default: "active"
+  },
+  deadline: {
+    type: Date,
+    required: true
   }
 }, { timestamps: true });
 

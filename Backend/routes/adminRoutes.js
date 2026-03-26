@@ -15,5 +15,6 @@ router.delete("/exams/:examId", adminController.deleteExam);
 router.get("/audit-logs", adminController.getAuditLogs);
 
 router.get("/system-analytics", adminController.getSystemAnalytics);
+router.post("/assign", adminController.assignMapping);
 
 module.exports = router;
