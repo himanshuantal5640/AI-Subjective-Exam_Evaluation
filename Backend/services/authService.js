@@ -37,7 +37,12 @@ exports.registerUser = async ({ name, email, password, role }) => {
 
   await user.save();
 
-  await sendOTPEmail(email, otp);
+  console.log(`🔑 [OTP LOG] Generated registration OTP for ${email}: ${otp}`);
+  try {
+    await sendOTPEmail(email, otp);
+  } catch (err) {
+    console.error("❌ Failed to send registration OTP email:", err.message || err);
+  }
 
   return true;
 };
@@ -130,7 +135,12 @@ exports.sendResetOTP = async ({ email }) => {
 
   await user.save();
 
-  await sendOTPEmail(email, otp);
+  console.log(`🔑 [OTP LOG] Generated password reset OTP for ${email}: ${otp}`);
+  try {
+    await sendOTPEmail(email, otp);
+  } catch (err) {
+    console.error("❌ Failed to send password reset OTP email:", err.message || err);
+  }
 
   return true;
 };
@@ -190,7 +200,12 @@ exports.resendOTP = async ({ email }) => {
 
   await user.save();
 
-  await sendOTPEmail(email, otp);
+  console.log(`🔑 [OTP LOG] Resent OTP for ${email}: ${otp}`);
+  try {
+    await sendOTPEmail(email, otp);
+  } catch (err) {
+    console.error("❌ Failed to send resent OTP email:", err.message || err);
+  }
 
   return true;
 };

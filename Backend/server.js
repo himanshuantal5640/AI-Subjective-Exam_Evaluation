@@ -57,3 +57,6 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+// Triggering restart to reload modified .env variables
+
+
