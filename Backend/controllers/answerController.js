@@ -3,96 +3,92 @@ const Question = require("../models/Question");
 const evaluationService = require("../services/evaluationService");
 const { evaluateWithAI } = require("../config/openRouter");
 const Answer = require("../models/Answer");
+
 exports.submitAnswer = async (req, res) => {
-
   try {
-
     const { examId, questionId, answerText } = req.body;
+    const studentId = req.user._id || req.user.id;
 
-    if (!examId || !questionId || !answerText)
+    if (!examId || !questionId || !answerText) {
       return res.status(400).json({
         message: "All fields required"
       });
+    }
 
-    if (answerText.trim().length < 10)
+    if (answerText.trim().length < 10) {
       return res.status(400).json({
         message: "Answer too short"
       });
+    }
 
     const question = await Question.findById(questionId);
-    if (!question)
+    if (!question) {
       return res.status(404).json({
         message: "Question not found"
       });
+    }
 
-    
     const existingAnswer = await Answer.findOne({
-      studentId: req.user.id,
+      studentId,
       questionId
     });
 
-    if (existingAnswer)
+    if (existingAnswer) {
       return res.status(400).json({
         message: "Answer already submitted"
       });
+    }
 
+    const coverage = evaluationService.analyzeConceptCoverage(
+      answerText,
+      question.concepts || []
+    );
 
-    const coverage =
-      evaluationService.analyzeConceptCoverage(
-        answerText,
-        question.concepts
-      );
+    const rubricScore = evaluationService.calculateRubricScore(
+      answerText,
+      question.rubric || []
+    );
 
-    const rubricScore =
-      evaluationService.calculateRubricScore(
-        answerText,
-        question.rubric
-      );
+    const qualityScore = evaluationService.calculateQualityScore(answerText);
 
-    const qualityScore =
-      evaluationService.calculateQualityScore(answerText);
+    const ruleFinalScore = evaluationService.calculateFinalScore(
+      rubricScore,
+      coverage.coverageScore,
+      qualityScore
+    );
 
-    const ruleFinalScore =
-      evaluationService.calculateFinalScore(
-        rubricScore,
-        coverage.coverageScore,
-        qualityScore
-      );
-
-  
     let aiScore = 0;
     let aiFeedback = "AI evaluation unavailable";
     let aiConfidence = "Low";
 
     try {
+      if (process.env.OPENROUTER_API_KEY) {
+        const aiResult = await evaluateWithAI(
+          question.text,
+          question.rubric || [],
+          answerText,
+          question.totalMarks
+        );
 
-      const aiResult = await evaluateWithAI(
-        question.text,
-        question.rubric,
-        answerText,
-        question.totalMarks
-      );
+        aiScore = Math.min(
+          Math.max(aiResult.score || 0, 0),
+          question.totalMarks
+        );
 
-      aiScore = Math.min(
-        Math.max(aiResult.score, 0),
-        question.totalMarks
-      );
-
-      aiFeedback = aiResult.feedback;
-      aiConfidence = aiResult.confidence;
-
+        aiFeedback = aiResult.feedback || "";
+        aiConfidence = aiResult.confidence || "Medium";
+      }
     } catch (error) {
       console.error("AI Error:", error.message);
     }
 
     const hybridFinalScore = Math.min(
-      Math.round((ruleFinalScore * 0.4) +
-                 (aiScore * 0.6)),
+      Math.round(ruleFinalScore * 0.4 + aiScore * 0.6),
       question.totalMarks
     );
 
     const answer = await Answer.create({
-      studentId: req.user.id,
+      studentId,
       examId,
       questionId,
       answerText,
@@ -117,22 +113,23 @@ exports.submitAnswer = async (req, res) => {
     // Automatically mark attendance as present
     const Attendance = require("../models/Attendance");
     await Attendance.findOneAndUpdate(
-      { studentId: req.user.id, examId },
+      { studentId, examId },
       { status: "present" },
       { upsert: true, new: true }
     );
 
     res.status(201).json(answer);
-
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
-exports.getMyAnswers = async (req, res) => {
-  const answers = await service.getAnswersByExam(
-    req.params.examId,
-    req.user.id
-  );
 
-  res.json(answers);
+exports.getMyAnswers = async (req, res) => {
+  try {
+    const studentId = req.user._id || req.user.id;
+    const answers = await service.getAnswersByExam(req.params.examId, studentId);
+    res.json(answers);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };

@@ -10,6 +10,10 @@ exports.addQuestion = async (req, res) => {
 };
 
 exports.getQuestions = async (req, res) => {
-  const qs = await service.getQuestionsByExam(req.params.examId);
-  res.json(qs);
+  try {
+    const qs = await service.getQuestionsByExam(req.params.examId);
+    res.json(qs);
+  } catch (e) {
+    res.status(500).json({ message: e.message });
+  }
 };

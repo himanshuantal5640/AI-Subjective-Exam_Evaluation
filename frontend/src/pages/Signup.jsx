@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AuthCard from "../components/ui/AuthCard";
@@ -22,9 +20,9 @@ export default function Signup() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-  const validatePassword = (password) => {
-    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
+  const validatePassword = (password) => {
+    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^~_\-.]).{8,}$/;
     return strongRegex.test(password);
   };
 
@@ -34,7 +32,7 @@ export default function Signup() {
 
     if (!validatePassword(form.password))
       return toast.error(
-        "Password must be 8+ chars, include uppercase, lowercase, number & special character",
+        "Password must be 8+ chars, include uppercase, lowercase, number & special character"
       );
 
     try {

@@ -4,7 +4,7 @@ const AuditLog = require("../models/AuditLog");
 exports.getAnswersByExam = async (examId) => {
   return await Answer.find({ examId })
     .populate("studentId", "name email")
-    .populate("questionId", "text");
+    .populate("questionId", "text totalMarks rubric concepts");
 };
 
 exports.overrideScore = async (
@@ -40,5 +40,4 @@ exports.getAuditLogsForAnswer = async (answerId) => {
   return await AuditLog.find({ answerId })
     .populate("teacherId", "name email")
     .sort({ createdAt: -1 });
-    // Allow teacher/admin to view logs.
 };

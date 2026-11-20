@@ -13,7 +13,6 @@ export default function AdminExams() {
         setExams(res.data);
       } catch (err) {
         console.error("Failed to fetch exams:", err);
-        // Fallback to dummy if API fails for now, or just show empty
       }
     };
     fetchExams();
@@ -53,7 +52,7 @@ export default function AdminExams() {
                   
                   <td className="py-[18px] px-[24px] text-center">
                     <div className={`inline-block px-[12px] py-[6px] rounded-[8px] ${darkMode ? 'bg-white/5 border-white/5 text-gray-300' : 'bg-gray-50 border-gray-100 text-gray-600'} border text-[13px]`}>
-                      {exam.teacher?.name || 'Unknown'}
+                      {exam.teacherId?.name || exam.teacher?.name || 'Unknown'}
                     </div>
                   </td>
                   

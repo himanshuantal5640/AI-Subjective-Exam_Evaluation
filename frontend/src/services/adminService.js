@@ -1,6 +1,7 @@
 import api from "./api";
 
 export const getAllUsers = () => api.get("/admin/users");
+export const createAdminUser = (data) => api.post("/admin/users", data);
 export const updateUserRole = (userId, role) => api.put(`/admin/users/${userId}/role`, { role });
 export const toggleUserStatus = (userId) => api.put(`/admin/users/${userId}/deactivate`);
 export const getAdminExams = () => api.get("/admin/exams");

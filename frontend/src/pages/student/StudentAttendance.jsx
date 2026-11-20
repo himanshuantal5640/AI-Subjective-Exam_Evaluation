@@ -112,12 +112,12 @@ export default function StudentAttendance() {
                        </div>
                        <div>
                           <div className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-blue-900'} font-['Orbitron'] truncate max-w-xs`}>
-                             {record.exam.title}
+                             {record.exam?.title || "Exam Node"}
                           </div>
                           <div className="flex items-center gap-3 mt-1">
-                             <div className="text-[9px] font-black text-blue-500/40 uppercase tracking-widest">{record.exam.subject}</div>
+                             <div className="text-[9px] font-black text-blue-500/40 uppercase tracking-widest">{record.exam?.subject || "General"}</div>
                              <div className="w-1 h-1 rounded-full bg-blue-500/20"></div>
-                             <div className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Protocol: #{record.exam._id.slice(-6)}</div>
+                             <div className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Protocol: #{record.exam?._id ? record.exam._id.slice(-6) : "N/A"}</div>
                           </div>
                        </div>
                     </div>

@@ -6,6 +6,7 @@ const role = require("../middleware/roleMiddleware");
 router.use(auth, role(["admin"]));
 
 router.get("/users", adminController.getUsers);
+router.post("/users", adminController.createUser);
 router.put("/users/:userId/role", adminController.updateRole);
 router.put("/users/:userId/deactivate", adminController.deactivateUser);
 

@@ -1,27 +1,42 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../../context/ThemeContext';
 import API from '../../services/api';
+import { toggleUserStatus } from '../../services/adminService';
+import toast from 'react-hot-toast';
 
 export default function AdminTeachers() {
   const { darkMode } = useTheme();
+  const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const fetchTeachers = async () => {
+    try {
+      const res = await API.get("/admin/users");
+      const allUsers = res.data;
+      const teacherUsers = allUsers.filter(u => u.role === 'teacher');
+      setTeachers(teacherUsers);
+    } catch (err) {
+      console.error("Failed to fetch teachers:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchTeachers = async () => {
-      try {
-        const res = await API.get("/admin/users");
-        const allUsers = res.data;
-        const teacherUsers = allUsers.filter(u => u.role === 'teacher');
-        setTeachers(teacherUsers);
-      } catch (err) {
-        console.error("Failed to fetch teachers:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTeachers();
   }, []);
+
+  const handleToggleStatus = async (teacherId) => {
+    try {
+      await toggleUserStatus(teacherId);
+      toast.success("Teacher status updated");
+      fetchTeachers();
+    } catch (err) {
+      toast.error("Failed to update status");
+    }
+  };
 
   return (
     <>
@@ -34,7 +49,10 @@ export default function AdminTeachers() {
             Manage faculty accounts and access privileges
           </p>
         </div>
-        <button className="bg-gradient-to-r from-indigo-500 to-violet-600 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] text-white px-[24px] py-[12px] rounded-[12px] font-bold font-['JetBrains_Mono'] text-[13px] tracking-[1px] uppercase transition-all duration-300">
+        <button 
+          onClick={() => navigate('/admin/add-user')}
+          className="bg-gradient-to-r from-indigo-500 to-violet-600 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] text-white px-[24px] py-[12px] rounded-[12px] font-bold font-['JetBrains_Mono'] text-[13px] tracking-[1px] uppercase transition-all duration-300 active:scale-95 cursor-pointer"
+        >
           + Add Teacher
         </button>
       </div>
@@ -80,15 +98,18 @@ export default function AdminTeachers() {
                     <div className={`text-[11px] ${darkMode ? 'text-gray-500' : 'text-gray-400'} mt-[2px]`}>{teacher.lastActive || 'N/A'}</div>
                   </td>
                   <td className="py-[16px] px-[24px] text-right">
-                    <button className={`px-[14px] py-[6px] rounded-[6px] ${darkMode ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20 hover:bg-indigo-500 hover:text-white' : 'bg-indigo-50 text-indigo-600 border-indigo-200 hover:bg-indigo-600 hover:text-white'} border text-[11px] font-bold font-['JetBrains_Mono'] uppercase transition-colors mr-[8px]`}>
-                      Edit
-                    </button>
-                    {teacher.status === 'active' ? (
-                      <button className={`px-[14px] py-[6px] rounded-[6px] ${darkMode ? 'bg-rose-500/10 text-rose-500 border-rose-500/20 hover:bg-rose-500 hover:text-white' : 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-600 hover:text-white'} border text-[11px] font-bold font-['JetBrains_Mono'] uppercase transition-colors`}>
+                    {teacher.isActive !== false ? (
+                      <button 
+                        onClick={() => handleToggleStatus(teacher._id)}
+                        className={`px-[14px] py-[6px] rounded-[6px] ${darkMode ? 'bg-rose-500/10 text-rose-500 border-rose-500/20 hover:bg-rose-500 hover:text-white' : 'bg-rose-50 text-rose-600 border-rose-200 hover:bg-rose-600 hover:text-white'} border text-[11px] font-bold font-['JetBrains_Mono'] uppercase transition-colors cursor-pointer`}
+                      >
                         Suspend
                       </button>
                     ) : (
-                      <button className={`px-[14px] py-[6px] rounded-[6px] ${darkMode ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500 hover:text-white' : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-600 hover:text-white'} border text-[11px] font-bold font-['JetBrains_Mono'] uppercase transition-colors`}>
+                      <button 
+                        onClick={() => handleToggleStatus(teacher._id)}
+                        className={`px-[14px] py-[6px] rounded-[6px] ${darkMode ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500 hover:text-white' : 'bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-600 hover:text-white'} border text-[11px] font-bold font-['JetBrains_Mono'] uppercase transition-colors cursor-pointer`}
+                      >
                         Activate
                       </button>
                     )}

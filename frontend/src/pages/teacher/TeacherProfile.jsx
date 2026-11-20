@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getTeacherProfile, updateTeacherProfile } from "../../services/teacherService";
+import { uploadProfileImage } from "../../services/userService";
 import { logoutUser } from "../../services/authService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -52,7 +53,7 @@ export default function TeacherProfile() {
     formData.append("image", file);
 
     try {
-      await updateTeacherProfile(formData);
+      await uploadProfileImage(formData);
       toast.success("Profile Photo Updated");
       fetchProfile();
     } catch {

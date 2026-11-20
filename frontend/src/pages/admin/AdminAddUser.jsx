@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
+import { createAdminUser } from '../../services/adminService';
+import toast from 'react-hot-toast';
 
 export default function AdminAddUser() {
   const { darkMode } = useTheme();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -12,11 +15,22 @@ export default function AdminAddUser() {
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simulate backend call
-    alert('User creation requested:\n' + JSON.stringify(formData, null, 2));
-    setFormData({ name: '', email: '', role: 'student', password: '' });
+    if (!formData.name || !formData.email || !formData.password) {
+      return toast.error("All fields required");
+    }
+
+    try {
+      setLoading(true);
+      await createAdminUser(formData);
+      toast.success("User account provisioned successfully! 🎉");
+      setFormData({ name: '', email: '', role: 'student', password: '' });
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to provision user");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -91,9 +105,10 @@ export default function AdminAddUser() {
 
           <button 
             type="submit"
-            className="w-full mt-4 bg-gradient-to-r from-indigo-500 to-violet-600 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] text-white px-[24px] py-[14px] rounded-[12px] font-bold font-['JetBrains_Mono'] text-[14px] tracking-[2px] uppercase transition-all duration-300 shadow-lg shadow-indigo-500/20"
+            disabled={loading}
+            className={`w-full mt-4 bg-gradient-to-r from-indigo-500 to-violet-600 hover:shadow-[0_0_20px_rgba(99,102,241,0.4)] text-white px-[24px] py-[14px] rounded-[12px] font-bold font-['JetBrains_Mono'] text-[14px] tracking-[2px] uppercase transition-all duration-300 shadow-lg shadow-indigo-500/20 active:scale-95 cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Provision User account
+            {loading ? "Provisioning..." : "Provision User account"}
           </button>
 
         </form>

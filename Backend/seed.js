@@ -10,7 +10,7 @@ const seed = async () => {
 
     // Clear existing users if they exist
     await User.deleteMany({
-      email: { $in: ["himanshuantal26@gmail.com", "teacher@example.com", "student@example.com"] }
+      email: { $in: ["himanshuantal26@gmail.com", "himanshuantal57@gmail.com", "teacher@example.com", "student@example.com"] }
     });
 
     const hashedPassword = await bcrypt.hash("Password@123", 10);

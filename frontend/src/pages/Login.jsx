@@ -20,43 +20,47 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleLogin = async () => {
-  if (!form.email || !form.password) {
-    return toast.error("All fields required");
-  }
-
-  try {
-    setLoading(true);
-
-    const response = await loginUser({
-      email: form.email,
-      password: form.password,
-    });
-
-    const role = response.data.role;
-
-    if (!role) {
-      toast.error("Invalid login response");
-      return;
+    if (!form.email || !form.password) {
+      return toast.error("All fields required");
     }
 
-    localStorage.setItem("role", role);
+    try {
+      setLoading(true);
 
-    toast.success("Login Successful 🎉");
+      const response = await loginUser({
+        email: form.email,
+        password: form.password,
+      });
 
-    if (role === "student") {
-      navigate("/student/dashboard", { replace: true });
-    } else if (role === "teacher") {
-      navigate("/teacher/dashboard", { replace: true });
-    } else if (role === "admin") {
-      navigate("/admin/dashboard", { replace: true });
+      const role = response.data.role;
+      const token = response.data.token;
+
+      if (!role) {
+        toast.error("Invalid login response");
+        return;
+      }
+
+      if (token) {
+        localStorage.setItem("token", token);
+      }
+      localStorage.setItem("role", role);
+
+      toast.success("Login Successful 🎉");
+
+      if (role === "student") {
+        navigate("/student/dashboard", { replace: true });
+      } else if (role === "teacher") {
+        navigate("/teacher/dashboard", { replace: true });
+      } else if (role === "admin") {
+        navigate("/admin/dashboard", { replace: true });
+      }
+
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Login Failed");
+    } finally {
+      setLoading(false);
     }
-
-  } catch (err) {
-    toast.error(err.response?.data?.message || "Login Failed");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <AuthCard title="Login">
@@ -90,6 +94,7 @@ export default function Login() {
 
       <button
         onClick={handleLogin}
+        disabled={loading}
         className="w-full py-3 rounded-lg 
         bg-gradient-to-r from-cyan-500 to-purple-500 
         text-white font-semibold 
